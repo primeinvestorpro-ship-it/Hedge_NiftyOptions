@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Hedge Nifty Options</string>
+    <string name="nifty_label">NIFTY 50</string>
+    <string name="spot_price_label">Spot Price</string>
+    <string name="expiry_label">Expiry</string>
+    <string name="atm_strike_label">ATM Strike</string>
+    <string name="call_option_label">Call Option</string>
+    <string name="put_option_label">Put Option</string>
+    <string name="straddle_label">ATM Straddle</string>
+    <string name="iv_label">IV</string>
+    <string name="theta_label">Theta</string>
+    <string name="gamma_label">Gamma</string>
+    <string name="oi_label">OI Change</string>
+    <string name="volume_label">Volume</string>
+    <string name="bid_ask_label">Bid-Ask</string>
+    <string name="edge_score_label">Edge Score</string>
+    <string name="probability_label">Probability</string>
+    <string name="expectancy_label">Expectancy</string>
+    <string name="trade_decision_label">Trade Decision</string>
+    <string name="required_move_label">Required Move</string>
+    <string name="expected_move_label">Expected Move</string>
+    <string name="time_window_label">Time Window</string>
+    <string name="risk_metrics_label">Risk Metrics</string>
+    <string name="filters_label">Filters</string>
+    <string name="buy_call">Buy Call</string>
+    <string name="buy_put">Buy Put</string>
+    <string name="buy_straddle">Buy Straddle</string>
+    <string name="no_trade">No Trade</string>
+    <string name="refresh">Refresh</string>
+    <string name="loading">Loading...</string>
+    <string name="error_fetching_data">Error fetching data. Please try again.</string>
+    <string name="no_internet">No internet connection.</string>
+    <string name="trade_triggered">Trade triggered successfully!</string>
+    <string name="order_placed">Order placed for %1$s at %2$s</string>
+</resources>

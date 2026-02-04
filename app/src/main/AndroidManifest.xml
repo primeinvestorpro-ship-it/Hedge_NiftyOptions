@@ -1,0 +1,6 @@
+// Add to AndroidManifest.xml inside <application>
+<receiver android:name=".TradeNotificationReceiver">
+    <intent-filter>
+        <action android:name="com.hedgenifty.TRADE_NOTIFICATION" />
+    </intent-filter>
+</receiver>

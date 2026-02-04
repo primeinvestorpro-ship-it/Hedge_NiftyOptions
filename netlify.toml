@@ -1,0 +1,22 @@
+[build]
+  command = "./gradlew assembleRelease"
+  publish = "app/build/outputs/apk/release/"
+
+[build.environment]
+  ANDROID_HOME = "/opt/android"
+  JAVA_HOME = "/opt/java"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[functions]
+  directory = "netlify/functions"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
