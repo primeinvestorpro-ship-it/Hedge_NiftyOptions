@@ -1,23 +1,19 @@
 package com.hedgenifty.utils
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
-import com.hedgenifty.data.TradeSignal
-import com.hedgenifty.data.TradeRecord
+import com.hedgenifty.models.TradeSignal
+import com.hedgenifty.models.TradeRecord
 import com.hedgenifty.models.TradeType
 import com.hedgenifty.models.TradeStatus
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class TradeManager(private val context: Context) {
     
     fun executeTrade(tradeSignal: TradeSignal, callback: (Boolean) -> Unit) {
-        // Simulate trade execution
         val isSuccessful = simulateTradeExecution(tradeSignal)
         callback(isSuccessful)
         
-        // Save to history
         if (isSuccessful) {
             saveToTradeHistory(tradeSignal)
             sendTradeNotification(tradeSignal)
@@ -25,8 +21,7 @@ class TradeManager(private val context: Context) {
     }
     
     private fun simulateTradeExecution(tradeSignal: TradeSignal): Boolean {
-        // Simulate network call or API integration
-        return true // Simulate success
+        return true
     }
     
     private fun saveToTradeHistory(tradeSignal: TradeSignal) {
@@ -40,7 +35,6 @@ class TradeManager(private val context: Context) {
             closedAt = null
         )
         
-        // Save to database or shared preferences
         val prefs = context.getSharedPreferences("HedgeNiftyPrefs", Context.MODE_PRIVATE)
         val json = com.google.gson.Gson().toJson(record)
         prefs.edit().putString("trade_record_${record.id}", json).apply()

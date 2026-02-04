@@ -8,7 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hedgenifty.data.TradeRecord
+import com.hedgenifty.models.TradeRecord
+import com.hedgenifty.models.TradeStatus
 import com.hedgenifty.ui.theme.HedgeNiftyOptionsTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,13 +69,13 @@ fun TradeHistoryScreen(
                                         text = "Strike: ${trade.tradeSignal.strikePrice}",
                                         fontSize = 14.sp
                                     )
-                                    Text(
+                                     Text(
                                         text = "Status: ${trade.status}",
                                         fontSize = 14.sp,
                                         color = when(trade.status) {
-                                            TradeRecord.TradeStatus.EXECUTED -> MaterialTheme.colorScheme.primary
-                                            TradeRecord.TradeStatus.CLOSED -> MaterialTheme.colorScheme.secondary
-                                            TradeRecord.TradeStatus.FAILED -> MaterialTheme.colorScheme.error
+                                            TradeStatus.EXECUTED -> MaterialTheme.colorScheme.primary
+                                            TradeStatus.CLOSED -> MaterialTheme.colorScheme.secondary
+                                            TradeStatus.FAILED -> MaterialTheme.colorScheme.error
                                             else -> MaterialTheme.colorScheme.onSurface
                                         }
                                     )

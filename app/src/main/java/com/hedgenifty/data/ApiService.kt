@@ -1,9 +1,6 @@
 package com.hedgenifty.data
 
 import com.hedgenifty.models.TradeSignal
-import com.hedgenifty.models.StrategyResult
-import com.hedgenifty.models.NiftyData
-import com.hedgenifty.models.OptionChainData
 import com.hedgenifty.models.TradeRecord
 import retrofit2.Call
 import retrofit2.http.GET

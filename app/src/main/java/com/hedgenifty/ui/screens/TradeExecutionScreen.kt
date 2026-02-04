@@ -8,10 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hedgenifty.data.TradeSignal
-import com.hedgenifty.data.TradeRecord
+import com.hedgenifty.models.TradeSignal
 import com.hedgenifty.models.TradeType
-import com.hedgenifty.models.TradeStatus
 import com.hedgenifty.ui.theme.HedgeNiftyOptionsTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

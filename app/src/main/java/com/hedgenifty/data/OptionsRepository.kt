@@ -1,7 +1,7 @@
 package com.hedgenifty.data
 
 import com.hedgenifty.models.TradeSignal
-import com.hedgenifty.models.StrategyResult
+import com.hedgenifty.models.TradeRecord
 
 interface OptionsRepository {
     suspend fun getLiveNiftyData(): NiftyData?

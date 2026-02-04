@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'org.jetbrains.kotlin.android.extensions'
     id 'kotlin-kapt'
 }
 
@@ -74,8 +73,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
     
     // Dependency Injection
-    implementation 'io.insert-koin:koin-android:3.5.1'
-    implementation 'io.insert-koin:koin-androidx-compose:3.5.1'
+    implementation 'io.insert-koin:koin-android:3.5.3'
+    implementation 'io.insert-koin:koin-androidx-compose:3.5.3'
     
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
@@ -89,10 +88,4 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
-}
-
-repositories {
-    google()
-    mavenCentral()
-    maven { url "https://jitpack.io" }
 }

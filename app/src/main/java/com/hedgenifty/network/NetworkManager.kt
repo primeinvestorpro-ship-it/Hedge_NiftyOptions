@@ -4,11 +4,11 @@ import com.hedgenifty.data.ApiService
 import com.hedgenifty.data.NiftyData
 import com.hedgenifty.data.OptionChainData
 import com.hedgenifty.data.StrategyResult
-import com.hedgenifty.data.TradeSignal
-import com.hedgenifty.data.TradeRecord
+import com.hedgenifty.models.TradeSignal
+import com.hedgenifty.models.TradeRecord
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 class NetworkManager {
     private val apiService: ApiService
@@ -22,45 +22,45 @@ class NetworkManager {
         apiService = retrofit.create(ApiService::class.java)
     }
     
-    suspend fun getLiveNiftyData(): NiftyData? {
+    fun getLiveNiftyData(): NiftyData? {
         return try {
-            val response = apiService.getNiftyData("NIFTY")
+            val response: Response<NiftyData> = apiService.getNiftyData("NIFTY").execute()
             if (response.isSuccessful) response.body() else null
         } catch (e: Exception) {
             null
         }
     }
     
-    suspend fun getOptionsChain(): List<OptionChainData>? {
+    fun getOptionsChain(): List<OptionChainData>? {
         return try {
-            val response = apiService.getOptionsChain("NIFTY")
+            val response: Response<List<OptionChainData>> = apiService.getOptionsChain("NIFTY").execute()
             if (response.isSuccessful) response.body() else null
         } catch (e: Exception) {
             null
         }
     }
     
-    suspend fun calculateStrategy(spotPrice: Double, expiryDate: String): StrategyResult? {
+    fun calculateStrategy(spotPrice: Double, expiryDate: String): StrategyResult? {
         return try {
-            val response = apiService.calculateStrategy(spotPrice, expiryDate)
+            val response: Response<StrategyResult> = apiService.calculateStrategy(spotPrice, expiryDate).execute()
             if (response.isSuccessful) response.body() else null
         } catch (e: Exception) {
             null
         }
     }
     
-    suspend fun triggerTrade(tradeSignal: TradeSignal): Boolean {
+    fun triggerTrade(tradeSignal: TradeSignal): Boolean {
         return try {
-            val response = apiService.triggerTrade(tradeSignal)
+            val response: Response<Boolean> = apiService.triggerTrade(tradeSignal).execute()
             response.isSuccessful && response.body() == true
         } catch (e: Exception) {
             false
         }
     }
     
-    suspend fun getTradeHistory(): List<TradeRecord>? {
+    fun getTradeHistory(): List<TradeRecord>? {
         return try {
-            val response = apiService.getTradeHistory()
+            val response: Response<List<TradeRecord>> = apiService.getTradeHistory().execute()
             if (response.isSuccessful) response.body() else null
         } catch (e: Exception) {
             null

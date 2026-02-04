@@ -7,8 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.hedgenifty.data.TradeSignal
-import com.hedgenifty.data.TradeRecord
+import com.hedgenifty.models.TradeSignal
+import com.hedgenifty.models.TradeRecord
 
 class TradeViewModel(private val context: Context) : ViewModel() {
     private val prefs: SharedPreferences = context.getSharedPreferences("HedgeNiftyPrefs", Context.MODE_PRIVATE)
@@ -57,7 +57,11 @@ class TradeViewModel(private val context: Context) : ViewModel() {
 }
 
 class TradeViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
-    override fun <VM : ViewModel?> create(modelClass: Class<VM>): VM {
-        return TradeViewModel(context) as VM
+    @Suppress("UNCHECKED_CAST")
+    override fun <VM : ViewModel> create(modelClass: Class<VM>): VM {
+        if (modelClass.isAssignableFrom(TradeViewModel::class.java)) {
+            return TradeViewModel(context) as VM
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

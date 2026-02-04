@@ -9,6 +9,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hedgenifty.data.StrategyResult
+import com.hedgenifty.data.EdgeScores
+import com.hedgenifty.data.ProbabilityExpectancy
+import com.hedgenifty.data.RegimeProbs
+import com.hedgenifty.data.TradeDecision
+import com.hedgenifty.data.RiskMetrics
+import com.hedgenifty.data.Filters
 import com.hedgenifty.ui.theme.HedgeNiftyOptionsTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -18,12 +24,12 @@ fun StrategyCalculatorScreen(
     onCalculate: () -> Unit
 ) {
     var strategyResult by remember { mutableStateOf(StrategyResult(
-        edgeScores = StrategyResult.EdgeScores(0, 0, 0),
-        probabilityExpectancy = StrategyResult.ProbabilityExpectancy(0.0, 0.0, 0, 0.0, 0.0),
-        regimeProbs = StrategyResult.RegimeProbs(0.0, 0.0, 0.0, 0.0, emptyMap()),
-        tradeDecision = StrategyResult.TradeDecision("", 0.0, 0, 0, 0.0, 0.0, 0.0),
-        riskMetrics = StrategyResult.RiskMetrics(0.0, 0.0, 0.0, ""),
-        filters = StrategyResult.Filters(false, false, false, false, false, false),
+        edgeScores = EdgeScores(0, 0, 0),
+        probabilityExpectancy = ProbabilityExpectancy(0.0, 0.0, 0, 0.0, 0.0),
+        regimeProbs = RegimeProbs(0.0, 0.0, 0.0, 0.0, emptyMap()),
+        tradeDecision = TradeDecision("", 0.0, 0, 0, 0.0, 0.0, 0.0),
+        riskMetrics = RiskMetrics(0.0, 0.0, 0.0, ""),
+        filters = Filters(false, false, false, false, false, false),
         timestamp = 0
     )) }
     
