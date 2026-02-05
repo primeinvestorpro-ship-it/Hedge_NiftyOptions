@@ -1,22 +1,8 @@
 [build]
-  command = "./gradlew assembleRelease"
-  publish = "app/build/outputs/apk/release/"
+  command = "ls -la && ./gradlew clean assembleDebug --no-daemon"
+  publish = "app/build/outputs/apk/debug/"
 
 [build.environment]
   ANDROID_HOME = "/opt/android"
   JAVA_HOME = "/opt/java"
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
-[functions]
-  directory = "netlify/functions"
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block"
-    X-Content-Type-Options = "nosniff"
+  GRADLE_OPTS = "-Xmx2048m -Dorg.gradle.daemon=false"
