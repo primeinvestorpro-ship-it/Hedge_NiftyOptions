@@ -1,5 +1,5 @@
 [build]
-  command = "chmod +x gradlew && ./gradlew clean assembleDebug --no-daemon"
+  command = "export JAVA_HOME=$(ls -d /usr/lib/jvm/java-17* | head -n 1) && export PATH=$JAVA_HOME/bin:$PATH && java -version && chmod +x gradlew && ./gradlew clean assembleDebug --no-daemon"
   publish = "app/build/outputs/apk/debug/"
 
 [build.environment]
