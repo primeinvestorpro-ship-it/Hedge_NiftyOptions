@@ -1,5 +1,5 @@
 [build]
-  command = "ls -la && ./gradlew clean assembleDebug --no-daemon"
+  command = "ls -la && sh gradlew clean assembleDebug --no-daemon"
   publish = "app/build/outputs/apk/debug/"
 
 [build.environment]
