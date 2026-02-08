@@ -1,8 +1,9 @@
 [build]
-  command = "export JAVA_HOME=$(ls -d /usr/lib/jvm/java-17* | head -n 1) && export PATH=$JAVA_HOME/bin:$PATH && java -version && chmod +x gradlew && ./gradlew clean assembleDebug --no-daemon"
+  command = "chmod +x gradlew && ./gradlew clean assembleDebug --no-daemon"
   publish = "app/build/outputs/apk/debug/"
 
 [build.environment]
   JAVA_VERSION = "17"
+  MISE_JAVA_VERSION = "17"
   ANDROID_HOME = "/opt/android/sdk"
   GRADLE_OPTS = "-Xmx2048m -Dorg.gradle.daemon=false"
