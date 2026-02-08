@@ -1,5 +1,5 @@
 [build]
-  command = "sh gradlew clean assembleDebug --no-daemon"
+  command = "java -version && pwd && ls -l gradlew && chmod +x gradlew && ./gradlew clean assembleDebug --no-daemon --stacktrace"
   publish = "app/build/outputs/apk/debug/"
 
 [build.environment]
