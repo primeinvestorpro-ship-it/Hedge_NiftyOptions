@@ -2,7 +2,7 @@ package com.hedgenifty.network
 
 import com.hedgenifty.data.ApiService
 import com.hedgenifty.data.NiftyData
-import com.hedgenifty.data.OptionChainData
+import com.hedgenifty.data.NSEOptionChainResponse
 import com.hedgenifty.data.StrategyResult
 import com.hedgenifty.models.TradeSignal
 import com.hedgenifty.models.TradeRecord
@@ -14,8 +14,9 @@ class NetworkManager {
     private val apiService: ApiService
     
     init {
+        // Change this to your server IP or 'http://10.0.2.2:5000/' for Android Emulator local access
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.example.com/")
+            .baseUrl("http://192.168.1.10:5000/") 
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             
@@ -31,9 +32,9 @@ class NetworkManager {
         }
     }
     
-    fun getOptionsChain(): List<OptionChainData>? {
+    fun getOptionsChain(): NSEOptionChainResponse? {
         return try {
-            val response: Response<List<OptionChainData>> = apiService.getOptionsChain("NIFTY").execute()
+            val response: Response<NSEOptionChainResponse> = apiService.getOptionsChain("NIFTY").execute()
             if (response.isSuccessful) response.body() else null
         } catch (e: Exception) {
             null

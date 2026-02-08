@@ -1,8 +1,8 @@
 [build]
-  command = "ls -la && sh gradlew clean assembleDebug --no-daemon"
+  command = "java -version && sh gradlew clean assembleDebug --no-daemon"
   publish = "app/build/outputs/apk/debug/"
 
 [build.environment]
-  ANDROID_HOME = "/opt/android"
-  JAVA_HOME = "/opt/java"
+  JAVA_VERSION = "17"
+  ANDROID_HOME = "/opt/android/sdk"
   GRADLE_OPTS = "-Xmx2048m -Dorg.gradle.daemon=false"

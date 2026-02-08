@@ -13,7 +13,7 @@ interface ApiService {
     fun getNiftyData(@Query("symbol") symbol: String): Call<NiftyData>
     
     @GET("getOptionChain")
-    fun getOptionsChain(@Query("symbol") symbol: String): Call<List<OptionChainData>>
+    fun getOptionsChain(@Query("symbol") symbol: String): Call<NSEOptionChainResponse>
     
     @GET("calculateStrategy")
     fun calculateStrategy(
