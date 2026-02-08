@@ -1,5 +1,5 @@
 [build]
-  command = "unset JAVA_HOME && java -version && sh gradlew clean assembleDebug --no-daemon"
+  command = "env -u JAVA_HOME sh gradlew clean assembleDebug --no-daemon"
   publish = "app/build/outputs/apk/debug/"
 
 [build.environment]
