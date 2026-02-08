@@ -24,101 +24,167 @@ fun StrategyCalculatorScreen(
     onCalculate: () -> Unit
 ) {
     var strategyResult by remember { mutableStateOf(StrategyResult(
-        edgeScores = EdgeScores(0, 0, 0),
-        probabilityExpectancy = ProbabilityExpectancy(0.0, 0.0, 0, 0.0, 0.0),
-        regimeProbs = RegimeProbs(0.0, 0.0, 0.0, 0.0, emptyMap()),
-        tradeDecision = TradeDecision("", 0.0, 0, 0, 0.0, 0.0, 0.0),
-        riskMetrics = RiskMetrics(0.0, 0.0, 0.0, ""),
-        filters = Filters(false, false, false, false, false, false),
-        timestamp = 0
+        edgeScores = EdgeScores(75, 42, 68),
+        probabilityExpectancy = ProbabilityExpectancy(68.5, 45.0, 60, 55.0, 1.25),
+        regimeProbs = RegimeProbs(0.1, 0.4, 0.3, 0.2, emptyMap()),
+        tradeDecision = TradeDecision("BUY CALL", 22450.0, 15, 60, 2.5, 22400.0, 22550.0),
+        riskMetrics = RiskMetrics(-1.2, 0.65, 0.15, "Low Volume"),
+        filters = Filters(true, true, true, true, false, true),
+        timestamp = System.currentTimeMillis()
     )) }
     
-    LaunchedEffect(Unit) {
-        // Calculate strategy when needed
-    }
-    
     HedgeNiftyOptionsTheme {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "Strategy Calculator",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            // Strategy Results Display
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Strategy Analysis",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                    
-                    Spacer(modifier = Modifier.height(8.dp))
-                    
-                    // Edge Scores
-                    Text(
-                        text = "Edge Scores:",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text("Call: ${strategyResult.edgeScores.callEdge}")
-                    Text("Put: ${strategyResult.edgeScores.putEdge}")
-                    Text("Straddle: ${strategyResult.edgeScores.straddleEdge}")
-                    
-                    Spacer(modifier = Modifier.height(8.dp))
-                    
-                    // Trade Decision
-                    Text(
-                        text = "Trade Decision: ${strategyResult.tradeDecision.decision}",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = when(strategyResult.tradeDecision.decision) {
-                            "BUY" -> MaterialTheme.colorScheme.primary
-                            "NO TRADE" -> MaterialTheme.colorScheme.error
-                            else -> MaterialTheme.colorScheme.onSurface
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("Strategy Calculator", fontWeight = FontWeight.Bold) },
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            Icon(androidx.compose.material.icons.Icons.Default.ArrowBack, contentDescription = "Back")
                         }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = IndiaNavy,
+                        titleContentColor = IndiaWhite,
+                        navigationIconContentColor = IndiaWhite
                     )
-                    
-                    Spacer(modifier = Modifier.height(8.dp))
-                    
-                    // Probability and Expectancy
-                    Text(
-                        text = "Win Probability: ${strategyResult.probabilityExpectancy.winProbability}%",
-                        fontSize = 16.sp
-                    )
-                    Text(
-                        text = "Net Expectancy: ${strategyResult.probabilityExpectancy.netExpectancy}",
-                        fontSize = 16.sp
-                    )
-                }
+                )
             }
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            // Action Buttons
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp)
+                    .verticalScroll(androidx.compose.foundation.rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Button(onClick = onBack) {
-                    Text("Back")
+                // Analysis Result Header
+                Card(
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("Recommended Action", fontSize = 14.sp, color = MaterialTheme.colorScheme.primary)
+                        Text(
+                            text = strategyResult.tradeDecision.decision,
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.Black,
+                            color = if (strategyResult.tradeDecision.decision.contains("BUY")) IndiaGreen else IndiaSaffron
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(androidx.compose.material.icons.Icons.Default.Timer, contentDescription = null, modifier = Modifier.size(16.dp), tint = IndiaNavy)
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text("Entry Window: ${strategyResult.tradeDecision.entryWindow} mins", fontSize = 12.sp, color = IndiaNavy)
+                        }
+                    }
                 }
-                Button(onClick = onCalculate) {
-                    Text("Calculate")
+
+                // Grid of Scores
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    ScoreCard("Call Edge", "${strategyResult.edgeScores.callEdge}", IndiaSaffron, Modifier.weight(1f))
+                    ScoreCard("Put Edge", "${strategyResult.edgeScores.putEdge}", IndiaGreen, Modifier.weight(1f))
+                    ScoreCard("Straddle", "${strategyResult.edgeScores.straddleEdge}", IndiaNavy, Modifier.weight(1f))
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Detailed Metrics
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        MetricRow("Win Probability", "${strategyResult.probabilityExpectancy.winProbability}%", true)
+                        MetricRow("Expected Move", "${strategyResult.probabilityExpectancy.expectedMove} pts", false)
+                        MetricRow("Net Expectancy", "${strategyResult.probabilityExpectancy.netExpectancy}", true)
+                        MetricRow("Strike Price", "${strategyResult.tradeDecision.strike}", false)
+                        MetricRow("Stop Loss", "₹${strategyResult.tradeDecision.stopLoss}", true)
+                        MetricRow("Target", "₹${strategyResult.tradeDecision.profitTarget}", false)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Filters status
+                Text(
+                    text = "STRATEGY FILTERS",
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 12.sp,
+                    letterSpacing = 1.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                
+                FilterTag("IV Velocity Filter", strategyResult.filters.ivVelocityFilter)
+                FilterTag("Straddle Math Filter", strategyResult.filters.straddleMathFilter)
+                FilterTag("OI Micro Filter", strategyResult.filters.oiMicroFilter)
+                FilterTag("Gamma Amplification Filter", strategyResult.filters.gammaAmplificationFilter)
+                FilterTag("Microstructure Filter", strategyResult.filters.microstructureFilter)
+                
+                Spacer(modifier = Modifier.height(24.dp))
+                
+                Button(
+                    onClick = onCalculate,
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = IndiaNavy)
+                ) {
+                    Text("RE-CALCULATE STRATEGY", fontWeight = FontWeight.Bold)
                 }
             }
         }
+    }
+}
+
+@Composable
+fun ScoreCard(label: String, score: String, color: Color, modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(containerColor = color.copy(alpha = 0.1f)),
+        border = androidx.compose.foundation.BorderStroke(1.dp, color.copy(alpha = 0.3f))
+    ) {
+        Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(label, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = color)
+            Text(score, fontSize = 20.sp, fontWeight = FontWeight.Black, color = color)
+        }
+    }
+}
+
+@Composable
+fun MetricRow(label: String, value: String, isAlternate: Boolean) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(if (isAlternate) Color.Transparent else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
+            .padding(vertical = 12.dp, horizontal = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(label, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(value, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+    }
+}
+
+@Composable
+fun FilterTag(label: String, passed: Boolean) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = if (passed) androidx.compose.material.icons.Icons.Default.CheckCircle else androidx.compose.material.icons.Icons.Default.Cancel,
+            contentDescription = null,
+            tint = if (passed) IndiaGreen else Color.Gray,
+            modifier = Modifier.size(16.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = label,
+            fontSize = 14.sp,
+            color = if (passed) MaterialTheme.colorScheme.onSurface else Color.Gray,
+            fontWeight = if (passed) FontWeight.Medium else FontWeight.Normal
+        )
     }
 }

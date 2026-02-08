@@ -71,8 +71,3 @@
 -keepnames class javax.servlet.** { *; }
 -keepnames class org.ietf.jgss.** { *; }
 -dontwarn org.w3c.dom.**
-
-# Zerodha Kite
--keep class com.zerodha.kiteconnect.** { *; }
--keep class com.zerodha.kiteconnect.kiteconnect.** { *; }
--keep class com.zerodha.kiteconnect.kiteconnect.models.** { *; }

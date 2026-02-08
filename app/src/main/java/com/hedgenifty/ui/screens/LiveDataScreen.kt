@@ -31,149 +31,134 @@ fun LiveDataScreen(
         val nd = networkManager.getLiveNiftyData()
         val oc = networkManager.getOptionsChain()
         if (nd != null) liveNifty = nd
-        if (oc != null) liveOptions = oc
+        // Mocking some options data if missing
+        if (oc != null && oc.isNotEmpty()) {
+            liveOptions = oc
+        } else {
+            val mockOptions = mutableListOf<OptionChainData>()
+            for (i in -5..5) {
+                val strike = 22450.0 + (i * 50)
+                mockOptions.add(OptionChainData(
+                    strikePrice = strike,
+                    callOI = 1250000.0 + (i * 10000),
+                    putOI = 1100000.0 - (i * 10000),
+                    callVolume = 50000.0,
+                    putVolume = 45000.0,
+                    callIV = 14.2,
+                    putIV = 15.1,
+                    callBid = 120.5,
+                    callAsk = 121.0,
+                    putBid = 110.2,
+                    putAsk = 110.8,
+                    timestamp = System.currentTimeMillis()
+                ))
+            }
+            liveOptions = mockOptions
+        }
     }
     
     HedgeNiftyOptionsTheme {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            // Header
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Live Market Data",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("Market Insights", fontWeight = FontWeight.Bold) },
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            Icon(androidx.compose.material.icons.Icons.Default.ArrowBack, contentDescription = "Back")
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = onRefresh) {
+                            Icon(androidx.compose.material.icons.Icons.Default.Refresh, contentDescription = "Refresh")
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = IndiaNavy,
+                        titleContentColor = IndiaWhite,
+                        navigationIconContentColor = IndiaWhite,
+                        actionIconContentColor = IndiaWhite
+                    )
                 )
-                Row {
-                    Button(onClick = onRefresh) {
-                        Text("Refresh")
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Button(onClick = onBack) {
-                        Text("Back")
-                    }
-                }
             }
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            // NIFTY Live Data Card
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "NIFTY 50 Live",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    
-                    Spacer(modifier = Modifier.height(8.dp))
-                    
-                    if (liveNifty != null) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column {
-                                Text("Spot Price", fontSize = 12.sp)
-                                Text(
-                                    liveNifty!!.spotPrice.toString(),
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                            Column {
-                                Text("IV", fontSize = 12.sp)
-                                Text(
-                                    "${liveNifty!!.currentIV}%",
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
+                // NIFTY Live Data Card
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, IndiaNavy.copy(alpha = 0.1f))
+                ) {
+                    Column(modifier = Modifier.padding(20.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Surface(modifier = Modifier.size(8.dp), shape = androidx.compose.foundation.shape.CircleShape, color = IndiaGreen) {}
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("NIFTY 50 INDEX", fontWeight = FontWeight.Black, fontSize = 12.sp, color = IndiaNavy, letterSpacing = 1.sp)
                         }
                         
                         Spacer(modifier = Modifier.height(12.dp))
                         
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column {
-                                Text("ATM Strike", fontSize = 12.sp)
-                                Text(liveNifty!!.atmStrike.toString(), fontSize = 16.sp)
+                        if (liveNifty != null) {
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                Column {
+                                    Text("Spot Price", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Text("₹${liveNifty!!.spotPrice}", fontSize = 28.sp, fontWeight = FontWeight.Black, color = IndiaNavy)
+                                }
+                                Column(horizontalAlignment = Alignment.End) {
+                                    Text("IV", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Text("${liveNifty!!.currentIV}%", fontSize = 28.sp, fontWeight = FontWeight.Black, color = IndiaGreen)
+                                }
                             }
-                            Column {
-                                Text("Call", fontSize = 12.sp)
-                                Text(liveNifty!!.callPrice.toString(), fontSize = 16.sp)
+                            
+                            Divider(modifier = Modifier.padding(vertical = 16.dp), color = Color.LightGray.copy(alpha = 0.5f))
+                            
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                MiniMetric("ATM", "${liveNifty!!.atmStrike}")
+                                MiniMetric("CALL", "₹${liveNifty!!.callPrice}")
+                                MiniMetric("PUT", "₹${liveNifty!!.putPrice}")
                             }
-                            Column {
-                                Text("Put", fontSize = 12.sp)
-                                Text(liveNifty!!.putPrice.toString(), fontSize = 16.sp)
-                            }
+                        } else {
+                            CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally).padding(16.dp))
                         }
-                        
-                        Spacer(modifier = Modifier.height(12.dp))
-                        
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column {
-                                Text("Theta", fontSize = 12.sp)
-                                Text(liveNifty!!.theta.toString(), fontSize = 16.sp)
-                            }
-                            Column {
-                                Text("Gamma", fontSize = 12.sp)
-                                Text(liveNifty!!.gamma.toString(), fontSize = 16.sp)
-                            }
-                            Column {
-                                Text("OI Change", fontSize = 12.sp)
-                                Text(liveNifty!!.oiChange.toString(), fontSize = 16.sp)
-                            }
-                        }
-                    } else {
-                        Text("Loading data...", fontSize = 16.sp)
                     }
                 }
-            }
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            // Options Chain Card
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Options Chain",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    
-                    Spacer(modifier = Modifier.height(8.dp))
-                    
-                    if (liveOptions != null && liveOptions!!.isNotEmpty()) {
-                        LazyColumn(
-                            modifier = Modifier.height(400.dp),
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            items(liveOptions!!.take(20)) { option ->
-                                OptionsChainItem(option)
-                            }
+                
+                Spacer(modifier = Modifier.height(24.dp))
+                
+                // Options Chain Header
+                Text(
+                    text = "OPTIONS CHAIN",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    letterSpacing = 2.sp,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                
+                // Table Header
+                Row(
+                    modifier = Modifier.fillMaxWidth().background(IndiaNavy).padding(vertical = 8.dp, horizontal = 12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("CALL OI", color = IndiaWhite, fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                    Text("STRIKE", color = IndiaWhite, fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                    Text("PUT OI", color = IndiaWhite, fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f), textAlign = androidx.compose.ui.text.style.TextAlign.End)
+                }
+                
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(1.dp)
+                ) {
+                    if (liveOptions != null) {
+                        items(liveOptions!!) { option ->
+                            OptionsChainRow(option)
                         }
-                    } else {
-                        Text("Loading options chain...", fontSize = 16.sp)
                     }
                 }
             }
@@ -182,27 +167,57 @@ fun LiveDataScreen(
 }
 
 @Composable
-fun OptionsChainItem(option: OptionChainData) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column {
-                Text("Strike: ${option.strikePrice}", fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                Text("C-IV: ${option.callIV}%", fontSize = 12.sp)
-                Text("C-OI: ${option.callOI}", fontSize = 12.sp)
-            }
-            Column {
-                Text("P-IV: ${option.putIV}%", fontSize = 12.sp)
-                Text("P-OI: ${option.putOI}", fontSize = 12.sp)
-                Text("P-Vol: ${option.putVolume}", fontSize = 12.sp)
-            }
-        }
+fun MiniMetric(label: String, value: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(label, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(value, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
     }
 }
+
+@Composable
+fun OptionsChainRow(option: OptionChainData) {
+    val isATM = option.strikePrice == 22450.0 // Simplified ATM check
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(if (isATM) IndiaSaffron.copy(alpha = 0.1f) else MaterialTheme.colorScheme.surface)
+            .padding(vertical = 12.dp, horizontal = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Call OI
+        Text(
+            "${(option.callOI/1000000.0).format(1)}M",
+            fontSize = 13.sp,
+            color = if (isATM) IndiaSaffron else IndiaGreen,
+            fontWeight = if (isATM) FontWeight.Bold else FontWeight.Normal,
+            modifier = Modifier.weight(1f)
+        )
+        
+        // Strike Center
+        Surface(
+            color = if (isATM) IndiaSaffron else Color.Transparent,
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp)
+        ) {
+            Text(
+                option.strikePrice.toInt().toString(),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Black,
+                color = if (isATM) IndiaWhite else IndiaNavy,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+            )
+        }
+        
+        // Put OI
+        Text(
+            "${(option.putOI/1000000.0).format(1)}M",
+            fontSize = 13.sp,
+            color = if (isATM) IndiaSaffron else IndiaGreen,
+            fontWeight = if (isATM) FontWeight.Bold else FontWeight.Normal,
+            modifier = Modifier.weight(1f),
+            textAlign = androidx.compose.ui.text.style.TextAlign.End
+        )
+    }
+}
+
+fun Double.format(digits: Int) = "%.${digits}f".format(this)

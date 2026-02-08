@@ -2,9 +2,13 @@ package com.hedgenifty.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD1C4E9)
-val PurpleGrey80 = Color(0xFFC0CA9A)
-val Green80 = Color(0xFFA5D6A7)
-val Orange80 = Color(0xFFFFCCBC)
-val Red80 = Color(0xFFFFCACA)
-val Blue80 = Color(0xFFC5CAE9)
+val IndiaSaffron = Color(0xFFFF9933)
+val IndiaGreen = Color(0xFF138808)
+val IndiaNavy = Color(0xFF000080)
+val IndiaWhite = Color(0xFFFFFFFF)
+
+// Secondary/Accent colors
+val SaffronLight = Color(0xFFFFB366)
+val GreenLight = Color(0xFF2ECC71)
+val NavyLight = Color(0xFF333399)
+val SurfaceDark = Color(0xFF121212)
